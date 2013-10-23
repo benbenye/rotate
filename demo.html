@@ -1,0 +1,184 @@
+<html>
+<head>
+<style type="text/css">
+* {
+	padding:0;
+	margin:0;
+}
+.box {
+	width: 200px;
+	height: 200px;
+	overflow: hidden;
+	position: relative;
+	border: 1px solid blue;
+}
+.imgList {
+	display: block;
+	width:1400px;
+	position: relative;
+	left: -200px;
+}
+.imgList li {
+	display: block;
+	float: left;
+	width: 198px;
+	height: 198px;
+	border: 1px solid red;
+}
+.imgList li img{
+	width: 198px;
+	height: 198px;
+}
+#picBtn{width: 200px;height: 50px;}
+#picBtnList{display: block; width: 200px; height: 50px;}
+#picBtnList li{display: block; float: left; width: 25px; height: 10px;background: red; border: 1px solid #fff;}
+#picBtnList li.now{background: green;}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="box" class="box">
+		<ul id="imgList" class="imgList">
+			<li><img src="images/1.jpg" />1</li>
+			<li><img src="images/2.jpg" />2</li>
+			<li><img src="images/3.jpg" />3</li>
+			<li><img src="images/4.jpg" />4</li>
+			<li><img src="images/5.jpg" />5</li>
+			<li><img src="images/6.jpg" />6</li>
+			<li><img src="images/7.jpg" />7</li>
+		</ul>
+	</div>
+	<button id="btnP"> RunP</button>
+	<button id="btnN"> RunN</button>
+
+	<div id="picBtn">
+		<ul id="picBtnList">
+			<li>1</li>
+			<li class="now">2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+			<li>6</li>
+			<li>7</li>
+		</ul>
+	</div>
+
+	<script type="text/javascript">
+	(function TurnImage(boxId, imgListId, picBtnListId, btnPId, btnNId, isPlay, direction) {
+		var box = $("#" + boxId);
+		var imgList = $("#" + imgListId);
+		var picBtnList = $("#" + picBtnListId);
+		var btnP = $("#" + btnPId);
+		var btnN = $("#" + btnNId);
+		var w = $(imgList).css("left");
+		var num = ["1","2","3","4","5","6","7","8"];
+		var i = j = 0;
+
+		$(imgList).children().each(function(){
+			$(this).attr({name:num[i]});
+			i++;
+		});
+		$(picBtnList).children().each(function(){
+			$(this).attr({name:num[j]});
+			j++;
+		});
+
+		function changeState(){			
+		  $(imgList).children().removeClass();
+		  $(picBtnList).children().removeClass();
+		  $(imgList).children(":eq(1)").addClass("active");
+		  $(picBtnList).children().each(function(){
+		  	var picBtnListLiName = $(this).attr("name");
+		  	var imgListLiName = $(imgList).children(":eq(1)").attr("name");
+		  	if(picBtnListLiName==imgListLiName){
+		  		$(this).addClass("now");
+		  	}
+		  });
+		}
+		function nextImg(step) {
+		  //step = arguments[0] ? arguments[0] : 1;
+		  var f = $(imgList).children(":lt("+step+")").detach();
+		  $(imgList).append(f);
+		  $(imgList).css("left", "0");
+		  $(imgList).animate({left: w}, "slow");
+		  changeState();		  
+		}
+		function preImg(step){
+		  //step = arguments[0] ? arguments[0] : 1;
+		  step = $(imgList).children().length-step-1;			
+		  var l = $(imgList).children(":gt("+step+")").detach();
+		  $(imgList).prepend(l);
+		  $(imgList).css("left", parseInt(w)*2+"px");
+		  $(imgList).animate({left: w}, "slow");
+		  changeState();
+		}
+		$(btnN).click(function(){
+			nextImg(1);
+		});
+		$(btnP).click(function(){
+			preImg(1);
+		});
+		if (isPlay) {
+			if(direction=="left"){
+				funDe=nextImg;
+			}
+			else{
+				funDe=preImg;
+			}
+			autoPlay = setInterval(funDe, 2000);
+			$(box).hover(
+				function () {
+					clearInterval(autoPlay);
+				},
+				function () {
+					autoPlay = setInterval(funDe, 2000);
+				}
+			);
+			$(btnN).hover(
+				function () {
+					clearInterval(autoPlay);
+				},
+				function () {
+					autoPlay = setInterval(funDe, 2000);
+				}
+			);
+			$(btnP).hover(
+				function () {
+					clearInterval(autoPlay);
+				},
+				function () {
+					autoPlay = setInterval(funDe, 2000);
+				}
+			);
+		}
+		// 鼠标焦点
+
+		$("#picBtn ul li").hover(
+			function () {
+				clearInterval(autoPlay);
+				var btnNum = $(this).attr("name");//鼠标选择的数字
+				var actNum = $(".active").attr("name");
+				if(btnNum!=actNum){
+					var d_value = btnNum>actNum ? btnNum-actNum : actNum-btnNum;
+
+					if(btnNum>actNum){						
+						var d_value = btnNum-actNum;
+						nextImg(d_value); 
+					}
+					else{
+						var d_value = actNum-btnNum;//获取鼠标与当前图片的差值,差几就上一张几次
+						preImg(d_value);
+					}
+				}
+			},
+			function () {
+				autoPlay = setInterval(funDe, 2000);
+			}
+		);
+	})("box", "imgList", "picBtnList", "btnP", "btnN", true, "right");
+	$(document).ready(function(){
+		
+	});
+	</script>
+</body>
+</html>
