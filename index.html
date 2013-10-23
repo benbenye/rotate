@@ -1,0 +1,131 @@
+<html>
+<head>
+<style type="text/css">
+* {
+	padding:0;
+	margin:0;
+}
+.box {
+	width: 200px;
+	height: 200px;
+	overflow: hidden;
+	position: relative;
+	border: 1px solid blue;
+}
+.imgList {
+	display: block;
+	width:1400px;
+	position: relative;
+	left: -200px;
+}
+.imgList li {
+	display: block;
+	float: left;
+	width: 198px;
+	height: 198px;
+	border: 1px solid red;
+}
+.imgList li img{
+	width: 198px;
+	height: 198px;
+}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="box" class="box">
+		<ul id="imgList" class="imgList">
+			<li><img src="images/1.jpg" />1</li>
+			<li><img src="images/2.jpg" />2</li>
+			<li><img src="images/3.jpg" />3</li>
+			<li><img src="images/4.jpg" />4</li>
+			<li><img src="images/5.jpg" />5</li>
+			<li><img src="images/6.jpg" />6</li>
+			<li><img src="images/7.jpg" />7</li>
+		</ul>
+	</div>
+	<button id="btnP"> RunP</button>
+	<button id="btnN"> RunN</button>
+
+	<div id="picBtn">
+		<ul>
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+			<li>6</li>
+			<li>7</li>
+		</ul>
+	</div>
+
+	<script type="text/javascript">
+	(function TurnImage(boxId, imgListId, btnPId, btnNId, isPlay, direction) {
+		var box = $("#" + boxId);
+		var imgList = $("#" + imgListId);
+		var btnP = $("#" + btnPId);
+		var btnN = $("#" + btnNId);
+		var w = $(imgList).css("left");
+		function nextImg() {
+		  var f = $(imgList).children().first().detach();
+		  $(imgList).append(f);
+		  $(imgList).css("left", "0");
+		  $(imgList).animate({left: w}, "slow");
+		}
+		function preImg(){			
+		  var l = $(imgList).children().last().detach();
+		  $(imgList).prepend(l);
+		  $(imgList).css("left", w);
+		  $(imgList).animate({left: '0'}, "slow");
+		}
+		$(btnN).click(nextImg);
+		$(btnP).click(preImg);
+		if (isPlay) {
+			if(direction=="left"){
+				funDe=nextImg;
+			}
+			else{
+				funDe=preImg;
+			}
+			autoPlay = setInterval(funDe, 2000);
+			$(box).hover(
+				function () {
+					clearInterval(autoPlay);
+				},
+				function () {
+					autoPlay = setInterval(funDe, 2000);
+				}
+			);
+			$(btnN).hover(
+				function () {
+					clearInterval(autoPlay);
+				},
+				function () {
+					autoPlay = setInterval(funDe, 2000);
+				}
+			);
+			$(btnP).hover(
+				function () {
+					clearInterval(autoPlay);
+				},
+				function () {
+					autoPlay = setInterval(funDe, 2000);
+				}
+			);
+		}
+		$("#picBtn ul li").hover(
+			function () {
+
+				clearInterval(autoPlay);
+			},
+			function () {
+				autoPlay = setInterval(funDe, 2000);
+			}
+		);
+	})("box", "imgList", "btnP", "btnN", true, "right");
+	$(document).ready(function(){
+		
+	});
+	</script>
+</body>
+</html>
