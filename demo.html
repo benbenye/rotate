@@ -156,7 +156,7 @@
 		$("#picBtn ul li").hover(
 			function () {
 				clearInterval(autoPlay);
-				var btnNum = $(this).attr("name");//鼠标选择的数字
+				var btnNum = $(this).attr("name");//鼠标选择的数字1
 				var actNum = $(".active").attr("name");
 				if(btnNum!=actNum){
 					var d_value = btnNum>actNum ? btnNum-actNum : actNum-btnNum;
