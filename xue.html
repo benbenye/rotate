@@ -68,10 +68,6 @@
 
 	<script type="text/javascript">
 	(function TurnImage(boxId, imgListId, picBtnListId, btnPId, btnNId, isPlay, direction) {
-		if($('#imgList li').length == 1){
-			$('#imgList').css({left:0});
-			return false;
-		}
 		var box = $("#" + boxId),
 			imgList = $("#" + imgListId),
 			picBtnList = $("#" + picBtnListId),
@@ -160,30 +156,6 @@
 				}
 			);
 		}
-		// 鼠标焦点
-
-		$("#picBtn ul li").hover(
-			function () {
-				clearInterval(autoPlay);
-				var btnNum = $(this).attr("name");//鼠标选择的数字2
-				var actNum = $(".active").attr("name");
-				if(btnNum!=actNum){
-					var d_value = btnNum>actNum ? btnNum-actNum : actNum-btnNum;
-
-					if(btnNum>actNum){						
-						var d_value = btnNum-actNum;
-						nextImg(d_value); 
-					}
-					else{
-						var d_value = actNum-btnNum;//获取鼠标与当前图片的差值,差几就上一张几次
-						preImg(d_value);
-					}
-				}
-			},
-			function () {
-				autoPlay = setInterval(funDe, 2000);
-			}
-		);
 	})("box", "imgList", "picBtnList", "btnP", "btnN", true, "left");
 	</script>
 </body>
